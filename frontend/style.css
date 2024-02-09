@@ -1,63 +1,180 @@
+:root {
+  --backgroundGradient: linear-gradient(
+    to right,
+    rgba(201, 201, 201, 1),
+    rgba(255, 255, 255, 0.5)
+  );
+  --backgroundDark: #0c0c0c;
+  --textLight: #ffffff;
+  --shadowBlur: #adadad3f;
+}
+
 body {
-  height: 100vh;
+  height: 100%;
   width: 100%;
+  min-height: 100dvh;
   padding: 0;
   margin: 0;
-  background-color: #111;
-}
-body .navbar {
-  width: 100%;
-  height: 60px;
-  background: #111;
-}
-body .navbar .btn-container {
-  float: right;
-  display: flex;
-}
-body .navbar .btn-container .btn {
-  color: #fff;
-  margin-right: 20px;
-  margin-top: 10px;
-  font-size: 25px;
+  background-color: var(--backgroundDark);
   font-family: "Inter", sans-serif;
-  padding: 5px;
+}
+
+body .navbar {
+  box-sizing: border-box;
+  width: 100%;
+  height: 6rem;
+  background: var(--backgroundDark);
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 2rem;
+  position: fixed;
+  top: 0;
+}
+
+body .navbar .btn {
+  color: var(--textLight);
+  font-size: 1.5rem;
+  padding: 10px;
   cursor: pointer;
 }
-body .navbar .btn-container .btn-create {
+
+body .navbar .btn-create {
   background: #333;
   border-radius: 10px;
 }
+
 body .hero-section {
-  height: calc(100vh - 60px);
+  height: 100%;
   width: 100%;
-  top: 60px;
-  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-weight: 800;
 }
+
 body .hero-section .heading {
-  font-family: "Inter", sans-serif;
-  font-size: 10rem;
-  width: 100%;
+  font-size: min(12rem, 25dvw);
+  width: fit-content;
   text-align: center;
-  line-height: 180px;
-  margin-top: calc(50vh - 90px);
   font-weight: bolder;
-  background: -webkit-linear-gradient(360deg, #eee, #333);
-  -webkit-background-clip: text;
+  margin-block: -2rem;
+  background: var(--backgroundGradient);
+  background-clip: text;
   -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
 }
+
 body .hero-section .sub-heading {
-  color: #fff;
-  font-family: "Inter", sans-serif;
+  color: var(--textLight);
   width: 100%;
   text-align: center;
-  font-size: 1.5rem;
+  font-size: min(2.1rem, 4.5dvw);
+  font-weight: 500;
+  margin-block: 0rem;
 }
+
+body .section-heading {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-block: 5rem 0;
+  background: var(--backgroundGradient);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+body .featured-blogs .blogs {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  margin-block: 10rem;
+  flex-wrap: wrap;
+}
+
+body .featured-blogs .blog {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  margin-inline: 1rem;
+}
+
+body .featured-blogs .blog .blog-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body .featured-blogs .blog .blog-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  background: var(--backgroundGradient);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+body .featured-blogs .blog .blog-author {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  background: var(--backgroundGradient);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+  margin-top: -1.5rem;
+}
+
+body .featured-blogs .blog .blog-img {
+  height: 200px;
+  width: 200px;
+  border-radius: 10px;
+  border: 1px solid var(--textLight);
+  box-shadow: 0 0 20px 5px var(--shadowBlur);
+}
+
 body .footer {
   width: 100%;
+  padding: 5rem 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
+
 body .footer .heading {
-  color: #fff;
-  font-family: "Inter", sans-serif;
   text-align: center;
-  font-size: 1.5rem;
-}/*# sourceMappingURL=style.css.map */
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  background: var(--backgroundGradient);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-background-clip: text;
+}
+
+body .footer .icons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body .footer .icons .social-icon {
+  height: 3rem;
+  width: 3rem;
+  filter: invert(0.5);
+}
+
+#instagram {
+  height: 2.5rem;
+  width: 2.5rem;
+}
+
+#twitterx {
+  height: 2.2rem;
+  width: 2.2rem;
+}
