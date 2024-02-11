@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { StatusCodes } from "http-status-codes";
-import { BLOG_MESSAGES, SERVER_MESSAGES } from "../utils/messages/messages.js";
 
 // CONSTANTS
 const SERVER_URI = process.env.SERVER_URI;
@@ -24,43 +23,34 @@ import {
 
 const createBlog = async (req, res) => {
   try {
-    const { blogTitle, blogAuthor, blogSummary, blogURL } = req.body;
-    const query = { blogURL };
-
-    const blogExists = await READBLOGDB(query, fields);
-    if (blogExists.length > 0) {
-      return res
-        .status(StatusCodes.CONFLICT)
-        .send(BLOG_MESSAGES.BLOG_ALREADY_EXISTS);
-    }
+    const { blogTitle, blogAuthor, blogContent } = req.body;
 
     const blogImageURL = `${SERVER_URI}/images/blogs/${req.files["blogImg"][0].filename}`;
 
     const blog = await CREATEBLOGDB({
       blogTitle,
       blogAuthor,
-      blogSummary,
+      blogContent,
       blogImageURL,
-      blogURL,
     });
 
     if (blog) {
-      console.log(BLOG_MESSAGES.BLOG_CREATED, { blog });
+      console.log("Blog Created", { blog });
       return res.status(StatusCodes.CREATED).send({
-        response: BLOG_MESSAGES.BLOG_CREATED,
+        response: "Blog Created",
         blogId: blog._id,
       });
     } else {
-      console.log(BLOG_MESSAGES.ERROR_CREATING_BLOG, { error });
+      console.log("Error Creating Blog", { error });
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+        .send("Internal Server Error");
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_CREATING_BLOG, { error });
+    console.log("Error Creating Blog", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -70,20 +60,18 @@ const readBlog = async (req, res) => {
     const blog = await READBLOGDB(query, fields);
 
     if (blog.length > 0) {
-      console.log(BLOG_MESSAGES.BLOG_FOUND, { blog });
+      console.log("Blog Found", { blog });
 
       return res.status(StatusCodes.OK).send(blog);
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_FOUND, { blog });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(BLOG_MESSAGES.BLOG_NOT_FOUND);
+      console.log("Blog Not Found", { blog });
+      return res.status(StatusCodes.NOT_FOUND).send("Blog Not Found");
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_READING_BLOG, { error });
+    console.log("Error Reading Blog", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -93,19 +81,17 @@ const updateBlog = async (req, res) => {
     const data = req.body;
     const message = await UPDATEBLOGDB(query, data, fields);
     if (message) {
-      console.log(BLOG_MESSAGES.BLOG_UPDATED, { message });
+      console.log("Blog Updated", { message });
       return res.status(StatusCodes.OK).send(message);
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_UPDATED, { message });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(BLOG_MESSAGES.BLOG_NOT_UPDATED);
+      console.log("Blog Not Updated", { message });
+      return res.status(StatusCodes.NOT_FOUND).send("Blog Not Updated");
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_UPDATING_BLOG, { error });
+    console.log("Error Updating Blog", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -114,19 +100,17 @@ const deleteBlog = async (req, res) => {
     const query = { _id: req.query.id };
     const message = await DELETEBLOGDB(query);
     if (message) {
-      console.log(BLOG_MESSAGES.BLOG_DELETED, { message });
-      return res.status(StatusCodes.OK).send(BLOG_MESSAGES.BLOG_DELETED);
+      console.log("Blog Deleted", { message });
+      return res.status(StatusCodes.OK).send("Blog Deleted");
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_DELETED, { message });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(BLOG_MESSAGES.BLOG_NOT_DELETED);
+      console.log("Blog Not Deleted", { message });
+      return res.status(StatusCodes.NOT_FOUND).send("Blog Not Deleted");
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_DELETING_BLOG, { error });
+    console.log("Error Deleting Blog", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 

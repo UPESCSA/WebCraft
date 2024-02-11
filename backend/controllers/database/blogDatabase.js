@@ -1,5 +1,4 @@
 import { BLOGMODEL } from "../../models/blogModel.js";
-import { BLOG_MESSAGES } from "../../utils/messages/messages.js";
 
 // DATABASE OPERATIONS
 
@@ -7,14 +6,14 @@ const createBlogDB = async (data) => {
   try {
     const result = await BLOGMODEL(data).save();
     if (result !== null) {
-      console.log(BLOG_MESSAGES.BLOG_CREATED, { userId: result._id });
+      console.log("Blog Created", { userId: result._id });
       return result;
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_CREATED, { userId: result._id });
+      console.log("Blog Not Created", { userId: result._id });
       return false;
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_CREATING_BLOG, (data, error));
+    console.log("Error Creating Blog", (data, error));
     return false;
   }
 };
@@ -23,14 +22,14 @@ const readBlogDB = async (query, fields) => {
   try {
     const result = await BLOGMODEL.find(query).select(fields);
     if (result.length > 0) {
-      console.log(BLOG_MESSAGES.BLOG_READ);
+      console.log("Blog Read");
       return result;
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_READ);
+      console.log("Blog Not Read");
       return false;
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_READING_BLOG, {
+    console.log("Error Reading Blog", {
       query,
       error,
     });
@@ -44,14 +43,14 @@ const updateBlogDB = async (query, data, fields) => {
       new: true,
     }).select(fields);
     if (result) {
-      console.log(BLOG_MESSAGES.BLOG_UPDATED, { userId: result });
+      console.log("Blog Updated", { userId: result });
       return result;
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_UPDATED, { userId: result });
+      console.log("Blog Not Updated", { userId: result });
       return false;
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_UPDATING_BLOG, (query, data, error));
+    console.log("Error Updating Blog", (query, data, error));
     return false;
   }
 };
@@ -61,14 +60,14 @@ const deleteBlogDB = async (query) => {
     const result = await BLOGMODEL.findOneAndDelete(query);
 
     if (result) {
-      console.log(BLOG_MESSAGES.BLOG_DELETED, { userId: result._id });
+      console.log("Blog Updated", { userId: result._id });
       return result;
     } else {
-      console.log(BLOG_MESSAGES.BLOG_NOT_DELETED, { userId: result._id });
+      console.log("Blog Not Deleted", { userId: result._id });
       return false;
     }
   } catch (error) {
-    console.log(BLOG_MESSAGES.ERROR_DELETING_BLOG, (query, error));
+    console.log("Error Deleting Blog", (query, error));
     return false;
   }
 };

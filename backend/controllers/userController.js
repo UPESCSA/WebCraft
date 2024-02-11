@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
 import { genSalt, hash, compare } from "bcrypt";
 import { GENERATETOKEN } from "../middlewares/jwtAuthMW.js";
-import { USER_MESSAGES, SERVER_MESSAGES } from "../utils/messages.js";
 
 // ENVIRONMENT VARIABLES
 dotenv.config();
@@ -19,10 +18,10 @@ const fields = {
 // DATABASE CONTROLLERS
 
 import {
-  CREATE_USER_DB,
-  READ_USER_DB,
-  UPDATE_USER_DB,
-  DELETE_USER_DB,
+  CREATEUSERDB,
+  READUSERDB,
+  UPDATEUSERDB,
+  DELETEUSERDB,
 } from "./database/userDatabase.js";
 
 // CONTROLLERS
@@ -35,54 +34,50 @@ const createUser = async (req, res) => {
     const salt = await genSalt(SALT_ROUNDS);
     const hashedPassword = await hash(password, salt);
 
-    const userExists = await READ_USER_DB(query);
+    const userExists = await READUSERDB(query);
     if (userExists.length > 0) {
-      return res
-        .status(StatusCodes.CONFLICT)
-        .send(USER_MESSAGES.USER_ALREADY_EXISTS);
+      return res.status(StatusCodes.CONFLICT).send("User Already Exists!");
     }
 
-    const user = await CREATE_USER_DB({
+    const user = await CREATEUSERDB({
       username,
       email,
       password: hashedPassword,
     });
 
     if (user) {
-      console.log(USER_MESSAGES.USER_CREATED, { user });
-      return res.status(StatusCodes.CREATED).send(USER_MESSAGES.USER_CREATED);
+      console.log("User Created Successfully", { user });
+      return res.status(StatusCodes.CREATED).send("User Created Successfully");
     } else {
-      console.log(USER_MESSAGES.ERROR_CREATING_USER);
+      console.log("Error Creating User");
       return res
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
-        .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+        .send("Internal Server Error");
     }
   } catch (error) {
-    console.log(USER_MESSAGES.ERROR_CREATING_USER, { error });
+    console.log("Error Creating User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
 const readUser = async (req, res) => {
   try {
     const query = { _id: req.user.user_id };
-    const user = await READ_USER_DB(query, fields);
+    const user = await READUSERDB(query, fields);
     if (user.length > 0) {
-      console.log(USER_MESSAGES.USER_FOUND, { user });
+      console.log("User Found", { user });
       return res.status(StatusCodes.OK).send(user);
     } else {
-      console.log(USER_MESSAGES.USER_NOT_FOUND, { user });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(USER_MESSAGES.USER_NOT_FOUND);
+      console.log("User Not Found", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Found");
     }
   } catch (error) {
-    console.log(USER_MESSAGES.ERROR_READING_USER, { error });
+    console.log("Error Reading User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -90,42 +85,38 @@ const updateUser = async (req, res) => {
   try {
     const query = { _id: req.user.user_id };
     const data = req.body;
-    const user = await UPDATE_USER_DB(query, data, fields);
+    const user = await UPDATEUSERDB(query, data, fields);
     if (user) {
-      console.log(USER_MESSAGES.USER_UPDATED, { user });
+      console.log("User Updated", { user });
       return res.status(StatusCodes.OK).send(user);
     } else {
-      console.log(USER_MESSAGES.USER_NOT_UPDATED, { user });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(USER_MESSAGES.USER_NOT_UPDATED);
+      console.log("User Not Updated", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Updated");
     }
   } catch (error) {
-    console.log(USER_MESSAGES.ERROR_UPDATING_USER, { error });
+    console.log("Error Updating User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
 const deleteUser = async (req, res) => {
   try {
     const query = { _id: req.user.user_id };
-    const user = await DELETE_USER_DB(query);
+    const user = await DELETEUSERDB(query);
     if (user) {
-      console.log(USER_MESSAGES.USER_DELETED, { user });
-      return res.status(StatusCodes.OK).send(USER_MESSAGES.USER_DELETED);
+      console.log("User Deleted", { user });
+      return res.status(StatusCodes.OK).send("User Deleted");
     } else {
-      console.log(USER_MESSAGES.USER_NOT_DELETED, { user });
-      return res
-        .status(StatusCodes.NOT_FOUND)
-        .send(USER_MESSAGES.USER_NOT_DELETED);
+      console.log("User Not Deleted", { user });
+      return res.status(StatusCodes.NOT_FOUND).send("User Not Deleted");
     }
   } catch (error) {
-    console.log(USER_MESSAGES.ERROR_DELETING_USER, { error });
+    console.log("Error Deleting User", { error });
     return res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .send(SERVER_MESSAGES.INTERNAL_SERVER_ERROR);
+      .send("Internal Server Error");
   }
 };
 
@@ -133,7 +124,7 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   const query = { email };
 
-  const user = await READ_USER_DB(query);
+  const user = await READUSERDB(query);
 
   if (user.length > 0) {
     const validPassword = await compare(password, user[0].password);
@@ -145,24 +136,22 @@ const loginUser = async (req, res) => {
         username: user[0].username,
         messages: user[0].messages,
       };
-      console.log(USER_MESSAGES.USER_LOGGED_IN, { user });
+      console.log("User Logged In", { user });
       return res.status(StatusCodes.OK).json({ token, refreshToken, payload });
     } else {
-      console.log(USER_MESSAGES.USER_NOT_AUTHORIZED);
-      return res
-        .status(StatusCodes.UNAUTHORIZED)
-        .send(USER_MESSAGES.USER_NOT_AUTHORIZED);
+      console.log("User not Authorized");
+      return res.status(StatusCodes.UNAUTHORIZED).send("User not Authorized");
     }
   } else {
-    console.log(USER_MESSAGES.USER_NOT_FOUND);
-    return res.status(StatusCodes.NOT_FOUND).send(USER_MESSAGES.USER_NOT_FOUND);
+    console.log("User Not Found");
+    return res.status(StatusCodes.NOT_FOUND).send("User Not Found");
   }
 };
 
 export {
-  createUser as CREATE_USER,
-  readUser as READ_USER,
-  updateUser as UPDATE_USER,
-  deleteUser as DELETE_USER,
-  loginUser as LOGIN_USER,
+  createUser as CREATEUSER,
+  readUser as READUSER,
+  updateUser as UPDATEUSER,
+  deleteUser as DELETEUSER,
+  loginUser as LOGINUSER,
 };

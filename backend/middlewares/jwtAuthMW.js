@@ -1,7 +1,6 @@
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { StatusCodes } from "http-status-codes";
-import { SERVER_MESSAGES } from "../utils/messages.js";
 
 dotenv.config();
 
@@ -41,22 +40,18 @@ const verifyTokenMW = (req, res, next) => {
     let accessToken = req.headers.authorization;
     if (!accessToken) {
       console.log("No access token");
-      return res.status(401).send(SERVER_MESSAGES.UNAUTHORIZED_ACCESS);
+      return res.status(401).send("UnAuthorized Access");
     }
     accessToken = accessToken.split(" ")[1];
     const payload = verifyToken(accessToken, "accessToken");
     if (!payload) {
-      return res
-        .status(StatusCodes.UNAUTHORIZED)
-        .send(SERVER_MESSAGES.UNAUTHORIZED_ACCESS);
+      return res.status(StatusCodes.UNAUTHORIZED).send("UnAuthorized Access");
     }
     req.user = payload;
     next();
   } catch (err) {
     console.log(err);
-    return res
-      .status(StatusCodes.UNAUTHORIZED)
-      .send(SERVER_MESSAGES.UNAUTHORIZED_ACCESS);
+    return res.status(StatusCodes.UNAUTHORIZED).send("UnAuthorized Access");
   }
 };
 
