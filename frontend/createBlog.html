@@ -25,7 +25,7 @@
   <body>
     <!-- Navbar -->
     <div class="navbar">
-      <a href="./index.html" class="nav-home"></a>
+      <a href="./index.html" class="nav-home gradient-text">UR</a>
       <div class="nav-items">
         <a href="./feed.html" class="btn btn-feed">Feed</a>
         <a href="./userBlogs.html" class="btn btn-feed">My Blogs</a>
@@ -39,27 +39,44 @@
         </div>
       </div>
     </div>
-    
+
     <div class="blog-creation-form">
-        <div class="user-blog">
-            <div class="blog-img user-blog-img">
-                <input type="file" name="blogimage" id="blogimage" style="display: none;">
-                <img src="/public/images/imagePlaceholder.png" alt="blogImage" onclick="uploadFile()"/>
-                <div class="publish-btn">Publish</div>
-            </div>
-            <div class="user-blog-info">
-              <input type="text" class="user-blog-title user-blog-title-edit gradient-text" placeholder="blog title">
-              <p class="user-blog-author gradient-text">@upescsa</p>
-              <textarea name="user-blog-content-edit" id="user-blog-content-edit" class="user-blog-content-edit input-style" placeholder="your great story begins here!" ></textarea>
-              <img src="" alt="" class="viewBlogs">
-            </div>
+      <div class="user-blog">
+        <div class="blog-img user-blog-img">
+          <input
+            type="file"
+            name="blogimage"
+            id="blogimage"
+            style="display: none"
+          />
+          <img
+            src="/public/images/imagePlaceholder.png"
+            alt="blogImage"
+            onclick="uploadFile()"
+          />
+          <div class="publish-btn">Publish</div>
         </div>
+        <div class="user-blog-info">
+          <input
+            type="text"
+            class="user-blog-title user-blog-title-edit"
+            placeholder="Enter your blog title here"
+          />
+          <textarea
+            name="user-blog-content-edit"
+            id="user-blog-content-edit"
+            class="user-blog-content-edit input-style"
+            placeholder="Your great story begins here!"
+          ></textarea>
+          <img src="" alt="" class="viewBlogs" />
+        </div>
+      </div>
     </div>
     <script src="./srcipt.js"></script>
     <script>
-        let uploadFile = ()=>{
-            document.getElementById('blogimage').click();
-        }
+      let uploadFile = () => {
+        document.getElementById("blogimage").click();
+      };
     </script>
   </body>
 </html>
