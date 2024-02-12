@@ -6,10 +6,10 @@ dotenv.config();
 
 const generateToken = (payload) => {
   try {
-    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+    const token = jwt.sign(payload, 'my-very-cool-secret', {
       expiresIn: "15m",
     });
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, {
+    const refreshToken = jwt.sign(payload, 'my-very-cool-secret', {
       expiresIn: "1d",
     });
     return { token, refreshToken };
@@ -22,9 +22,9 @@ const verifyToken = (token, tokenType) => {
   try {
     let payload;
     if (tokenType === "accessToken") {
-      payload = jwt.verify(token, process.env.JWT_SECRET);
+      payload = jwt.verify(token, 'my-very-cool-secret');
     } else if (tokenType === "refreshToken") {
-      payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
+      payload = jwt.verify(token, 'my-very-cool-secret');
     } else {
       return false;
     }

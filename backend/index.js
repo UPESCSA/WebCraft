@@ -7,13 +7,14 @@ import { Database } from "./config/database.js";
 // ROUTERS
 import { BLOGROUTER } from "./routers/blogRouter.js";
 import { USERROUTER } from "./routers/userRouter.js";
+import { FRONTENDRouter } from "./routers/FRONTENDRouter.js";
 
 // CONFIG
 dotenv.config();
 
 // CONSTANTS
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI;
+const MONGODB_URI = 'mongodb+srv://webcraft:QFylW6JBelIW57Hl@basedb.jpdcqyt.mongodb.net/?retryWrites=true&w=majority';
 
 // INTIALIZING EXPRESS
 const app = express();
@@ -37,6 +38,8 @@ app.use("/api/test", (req, res) => {
 app.use("/api/blog", BLOGROUTER);
 app.use("/api/user", USERROUTER);
 
+//Frontend
+app.use('/', FRONTENDRouter);
 // DATABASE DISCONNECTION
 process.on("SIGINT", () => {
   database

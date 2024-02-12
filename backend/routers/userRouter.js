@@ -5,6 +5,7 @@ import {
   UPDATEUSER,
   READUSER,
   DELETEUSER,
+  LOGINUSER,
 } from "../controllers/userController.js";
 
 const UserRouter = express.Router();
@@ -15,4 +16,6 @@ UserRouter.route("/")
   .put(UPDATEUSER)
   .delete(DELETEUSER);
 
+UserRouter.route("/login")
+  .post(LOGINUSER)
 export { UserRouter as USERROUTER };

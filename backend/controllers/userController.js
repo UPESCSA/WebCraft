@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
 import { StatusCodes } from "http-status-codes";
-import { genSalt, hash, compare } from "bcrypt";
 import { GENERATETOKEN } from "../middlewares/jwtAuthMW.js";
 
 // ENVIRONMENT VARIABLES
@@ -30,10 +29,7 @@ const createUser = async (req, res) => {
   try {
     const { username, email, password } = req.body;
     const query = { email };
-
-    const salt = await genSalt(SALT_ROUNDS);
-    const hashedPassword = await hash(password, salt);
-
+    const hashedPassword = password;
     const userExists = await READUSERDB(query);
     if (userExists.length > 0) {
       return res.status(StatusCodes.CONFLICT).send("User Already Exists!");
@@ -47,7 +43,7 @@ const createUser = async (req, res) => {
 
     if (user) {
       console.log("User Created Successfully", { user });
-      return res.status(StatusCodes.CREATED).send("User Created Successfully");
+      return res.status(StatusCodes.CREATED).json({ msg: "User Created Successfully" });
     } else {
       console.log("Error Creating User");
       return res
@@ -127,7 +123,7 @@ const loginUser = async (req, res) => {
   const user = await READUSERDB(query);
 
   if (user.length > 0) {
-    const validPassword = await compare(password, user[0].password);
+    const validPassword = password == user[0].password;
     if (validPassword) {
       let payload = { user_id: user[0]._id, email };
       const { token, refreshToken } = GENERATETOKEN(payload);
